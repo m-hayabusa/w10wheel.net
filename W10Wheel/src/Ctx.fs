@@ -248,14 +248,6 @@ let isTriggerEvent (e: MouseEvent) =
 let isLRTrigger () =
     isTrigger LRTrigger
 
-let isDragTriggerEvent = function
-    | LeftEvent(_) -> isTrigger(LeftDragTrigger)
-    | RightEvent(_) -> isTrigger(RightDragTrigger)
-    | MiddleEvent(_) -> isTrigger(MiddleDragTrigger)
-    | X1Event(_) -> isTrigger(X1DragTrigger)
-    | X2Event(_) -> isTrigger(X2DragTrigger)
-    | _ -> raise (ArgumentException())
-
 let isSingleTrigger () =
     getFirstTrigger().IsSingle
 
@@ -436,6 +428,7 @@ let getScrollStartPoint () = Scroll.StartPoint
 let getScrollLockTime () = Scroll.LockTime
 let isCursorChange () = Scroll.CursorChange
 let isReverseScroll () = Scroll.Reverse
+let setReverseScroll (reverse: bool) = Scroll.Reverse <- reverse
 let isHorizontalScroll () = Scroll.Horizontal
 let isDraggedLock () = Scroll.DraggedLock
 let isSwapScroll () = Scroll.Swap
@@ -446,6 +439,18 @@ let setReleasedScrollMode () = Scroll.ReleasedMode <- true
 
 let setStartingScrollMode () = Scroll.SetStarting()
 let isStartingScrollMode () = Scroll.IsStarting
+
+let isDragTriggerEvent = function
+    | LeftEvent(_) -> isTrigger(LeftDragTrigger)
+    | RightEvent(_) -> isTrigger(RightDragTrigger)
+    | MiddleEvent(_) -> 
+        setReverseScroll(false) |> ignore
+        true
+    | X1Event(_) -> isTrigger(X1DragTrigger)
+    | X2Event(_) -> 
+        setReverseScroll(true) |> ignore
+        true
+    | _ -> raise (ArgumentException())
 
 type VHAdjusterMethod =
     | Fixed

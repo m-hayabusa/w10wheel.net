@@ -5,3 +5,7 @@
 .vs
 W10Wheel/bin/
 W10Wheel/obj/
+
+packages/
+
+.fake
